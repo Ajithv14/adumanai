@@ -27,5 +27,6 @@ def push_data_view(request):
             description = form.cleaned_data['description']
             url = form.cleaned_data['url']
             cake.update(name,description,url)
+            return index(request)
     return render(request, 'frontend/form_page.html', {'form': form}) 
 
