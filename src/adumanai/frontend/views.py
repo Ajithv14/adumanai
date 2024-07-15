@@ -1,24 +1,31 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 from .models import cakes_collections
-
+from .models import Cakes
+from .forms import FormCake
 import datetime
 
 
 
+# def index(request):
+#     cakes = cakes_collections.find()
+#     return HttpResponse(cakes)
+
 def index(request):
-    cakes = cakes_collections.find()
-    return HttpResponse(cakes)
+    my_dict = {"insert_me": "Hello this is from view.py!"}
+    return render(request,'frontend/index.html',context=my_dict)
 
-def push_data(request):
-    cake = {
-        "name": "Black forest",
-        "description": "Black forest description",
-        "tags": ["mongodb", "python", "pymongo"],
-        "price": "350",
-        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Black_Forest_gateau.jpg/1280px-Black_Forest_gateau.jpg",
-        "datetime": datetime.datetime.utcnow()
-    }
+def push_data_view(request):
+    form = FormCake()
+    if request.method == 'POST':
+        form = FormCake(request.POST)
+        
+        if form.is_valid():
+            print("Validations Good")
+            cake = Cakes()
+            name = form.cleaned_data['name']
+            description = form.cleaned_data['description']
+            url = form.cleaned_data['url']
+            cake.update(name,description,url)
+    return render(request, 'frontend/form_page.html', {'form': form}) 
 
-    cake_id = cakes_collections.insert_one(cake).inserted_id
-    out=(f'posted data successfully {cake_id}')
-    return HttpResponse(out)
