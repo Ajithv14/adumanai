@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, request, Blueprint, redirect
 from flask_login import login_user, current_user, logout_user, login_required
 from adumanai import mongo
-from adumanai.models import User, Cake
+from adumanai.models import User
 from adumanai.users.forms import RegistrationForm, LoginForm
 
 users = Blueprint('users',__name__)

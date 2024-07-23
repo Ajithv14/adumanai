@@ -3,6 +3,20 @@
 <div class="card">
     <div class="card-body">
       <h1>Adumanai Cakes app</h1>
+      {% for cake in cakes %}
+      <div class="d-flex justify-content-center">
+          <div class="card" style="width: 14rem;">
+              <img src="{{ cake.url }}" class="card-img-top" alt="{{ cake.name }}">
+              <div class="card-body">
+                  <h5 class="card-title">{{ cake.name }} {% if current_user.get_id() =='669d53d8a5b07e2b8fb7761a' %} <form action="{{url_for('cakes.delete_cake',cake_id=cake._id)}}" method="post" class="d-inline">
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                      </form> {% endif %}
+                  </h5>
+                  <h6>Price: {{cake.price}}/Kg</h6>
+              </div>
+          </div>
+      </div>
+      {% endfor %}
     </div>
-  </div>
+</div>
 {% endblock %}

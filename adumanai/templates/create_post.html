@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="width: 38rem;">
+    <div class="card-body" >
+      <form method="POST" action=""  enctype="multipart/form-data" >
+        {{ form.hidden_tag() }}
+        <div class="form-floating mb-3">
+          {{ form.name(class="form-control",placeholder="name@example.com")}}
+          {{ form.name.label(class="form-group")}}
+        </div>
+        <div class="form-floating">
+          {{ form.description(class="form-control",placeholder="description")}}
+          {{ form.description.label}}
+        </div>
+        <div class="form-floating">
+          {{ form.price(class="form-control",placeholder="price")}}
+          {{ form.price.label}}
+        </div>
+        <div class="form-floating">
+          {{ form.picture(class="form-control",placeholder="picture")}}
+          {{ form.picture.label}}
+        </div>
+        {% for error in form.name.errors %}
+          <span style="color: red;">[{{ error }}]</span><br>
+        {% endfor %}
+        <div class="d-grid gap-2 col-4 mx-auto">
+          {{ form.submit(class="btn btn-primary")}}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
