@@ -1,9 +1,11 @@
-# error_pages/handlers.py
+"""error_pages/handlers.py """
 
-from flask import render_template, request, Blueprint
+from flask import render_template, Blueprint
 
 error_pages = Blueprint('error_pages',__name__)
 
 @error_pages.app_errorhandler(404)
 def error_404(error):
+    """ customn 404 page"""
+    print(error)
     return render_template('error_pages/404.html'), 404

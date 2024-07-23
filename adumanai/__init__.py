@@ -1,7 +1,10 @@
+""" Entry point of the app"""
 from flask import Flask
 from flask_pymongo import PyMongo
-from config import Config
 from flask_login import LoginManager
+
+from config import Config
+
 
 app = Flask(__name__)
 
@@ -24,6 +27,7 @@ from adumanai.core.views import core
 from adumanai.users.views import users
 from adumanai.cakes_posts.views import cakes
 from adumanai.error_pages.handlers import error_pages
+
 app.register_blueprint(core)
 app.register_blueprint(users)
 app.register_blueprint(cakes)

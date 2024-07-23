@@ -1,4 +1,4 @@
-from datetime import datetime
+"""adumanai.models"""
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, current_user
@@ -6,20 +6,25 @@ from adumanai import login_manager
 from adumanai import mongo
 
 class User(UserMixin):
+    """Users model"""
     def __init__(self, email, name, password=None, password_hash=None, _id=None):
         self.email = email
         self.name = name
-        self.password_hash = password_hash if password_hash else generate_password_hash(password , method='pbkdf2', salt_length=16)
+        self.password_hash = password_hash if password_hash else generate_password_hash(password , 
+                                                                method='pbkdf2', salt_length=16)
 
         self._id = _id if _id else ObjectId()
 
     def check_password(self, password):
+        """ check password """
         return check_password_hash(self.password_hash, password)
-    
+#    
     def get_id(self):
+        """get id for login part"""
         return str(self._id)
     
     def to_dict(self):
+        """ to dict """
         return {
             "email": self.email,
             "name": self.name,
@@ -28,6 +33,7 @@ class User(UserMixin):
     
     @staticmethod
     def from_dict(data):
+        """ from dict to model """
         return User(
             email=data.get('email'),
             name=data.get('name'),
@@ -37,10 +43,12 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
+    """ load user """
     return User.from_dict(mongo.db.users.find_one({'_id': ObjectId(user_id)}))
 
 
 class Cake:
+    """Cake model """
     def __init__(self, name, description, price, url, belongs_to=None, _id=None):
         self.name = name
         self.description = description
@@ -51,6 +59,7 @@ class Cake:
         self.belongs_to = belongs_to if belongs_to else ObjectId(current_user.get_id())
 
     def to_dict(self):
+        """ to dict so that we can get from db """
         return {
             "name": self.name,
             "description": self.description,
@@ -61,6 +70,7 @@ class Cake:
     
     @staticmethod
     def from_dict(data):
+        """from dict to db"""
         return Cake(
             name=data.get('name'),
             description=data.get('description'),
@@ -71,4 +81,6 @@ class Cake:
         )
     
     def __repr__(self):
+        """String form"""
         return f'This cake[{self.name} costs {self.price} rupees]'
+    

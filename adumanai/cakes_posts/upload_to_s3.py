@@ -1,3 +1,4 @@
+"""upload to s3"""
 import boto3
 from adumanai import app
 s3_client = boto3.client('s3',
@@ -5,7 +6,9 @@ s3_client = boto3.client('s3',
                         aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY']) 
 
 
-def upload_file_to_s3(file, file_name, bucket_name=app.config['S3_BUCKET'],folder_name = 'cakes', S3_LOCATION=f"https://{app.config['S3_BUCKET']}.s3.amazonaws.com/"):
+def upload_file_to_s3(file, file_name, bucket_name=app.config['S3_BUCKET'],
+                      folder_name = 'cakes', S3_LOCATION=f"https://{app.config['S3_BUCKET']}.s3.amazonaws.com/"):
+    """upload file to s3 function"""
     try:
         s3_client.upload_fileobj(
             file,
@@ -20,3 +23,13 @@ def upload_file_to_s3(file, file_name, bucket_name=app.config['S3_BUCKET'],folde
         return e
     
     return f"{S3_LOCATION}{folder_name}/{file_name}"
+
+def delete_file_from_s3(file_name, bucket_name=app.config['S3_BUCKET'], folder_name = 'cakes'):
+    try:
+        s3_client.delete_object(
+            Bucket = bucket_name,
+            Key = f'{folder_name}/{file_name}'
+        )
+    except Exception as e:
+        print("Something Happened: ", e)
+        return e
