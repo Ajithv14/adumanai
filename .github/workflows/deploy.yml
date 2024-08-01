@@ -1,4 +1,4 @@
-name: Pylint
+name: Deploy
 
 on: [push]
 
@@ -6,7 +6,16 @@ jobs:
   build:
     runs-on: rpi-arm64
     steps:
-    - uses: actions/checkout@v4
-    - name: check file is there
+    - name: remove old directory
+      run: sudo rm /app/adumanai -rf
+
+    - name: Clone repository into /app
       run: |
-        ls /app
+        sudo git clone https://github.com/Ajithv14/adumanai.git /app
+        sudo cp /app/config.py /app/adumanai/config.py
+
+    - name: Change ownership of /app
+      run: sudo chown -R www-data:www-data /app/adumanai
+
+    - name: restart app
+      run: sudo systemctl restart app
