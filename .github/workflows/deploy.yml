@@ -22,8 +22,8 @@ jobs:
           else
             echo "/var/run/uwsgi directory already exists."
           fi
-        sudo chown -R www-data:www-data /var/run/uwsgi
-        sudo chown -R www-data:www-data /app/adumanai
+          sudo chown -R www-data:www-data /var/run/uwsgi
+          sudo chown -R www-data:www-data /app/adumanai
 
     - name: restart app
       run: sudo systemctl restart app
