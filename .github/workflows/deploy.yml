@@ -1,0 +1,12 @@
+name: Pylint
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: rpi-arm64
+    steps:
+    - uses: actions/checkout@v4
+    - name: check file is there
+      run: |
+        ls /app
