@@ -34,6 +34,7 @@ jobs:
         # Check for the presence of 'active (running)' in the log
         if grep -q 'active (running)' /tmp/app_status.log; then
           echo "App is running"
+          exit 0
         else
           echo "App is not running"
           exit 1
