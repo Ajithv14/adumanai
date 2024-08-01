@@ -15,7 +15,15 @@ jobs:
         sudo cp /app/config.py /app/adumanai/config.py
 
     - name: Change ownership of /app
-      run: sudo chown -R www-data:www-data /app/adumanai
+      run: |
+          if [ ! -d "/var/run/uwsgi" ]; then
+            sudo mkdir -p /var/run/uwsgi
+            echo "/var/run/uwsgi directory created."
+          else
+            echo "/var/run/uwsgi directory already exists."
+          fi
+        sudo chown -R www-data:www-data /var/run/uwsgi
+        sudo chown -R www-data:www-data /app/adumanai
 
     - name: restart app
       run: sudo systemctl restart app
