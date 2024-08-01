@@ -11,7 +11,7 @@ jobs:
 
     - name: Clone repository into /app
       run: |
-        sudo git clone https://github.com/Ajithv14/adumanai.git /app
+        sudo git clone https://github.com/Ajithv14/adumanai.git /app/adumanai
         sudo cp /app/config.py /app/adumanai/config.py
 
     - name: Change ownership of /app
