@@ -1,51 +1,40 @@
 """adumanai.users.views"""
-from flask import render_template, url_for, flash, request, Blueprint, redirect
-from flask_login import login_user, logout_user
-from adumanai import mongo
+from flask import render_template, url_for, flash, request, Blueprint, redirect, session
+from flask_login import login_user, logout_user, login_required
+from adumanai import mongo, oauth
 from adumanai.models import User
 from adumanai.users.forms import RegistrationForm, LoginForm
 
 users = Blueprint('users',__name__)
 
-# register
-@users.route('/register', methods=['GET','POST'])
-def register():
-    """signup page"""
-    form = RegistrationForm()
-
-    if form.validate_on_submit():
-        user = User(email=form.email.data,
-                    name=form.name.data,
-                    password=form.password.data)
+@users.route('/callback')
+def auth():
+    token = oauth.google.authorize_access_token()
+    user_info = token['userinfo']
+    user = User.from_dict(
+                mongo.db.users.find_one({'email': user_info['email']})
+                ) if mongo.db.users.find_one({'email': user_info['email']}
+                                             ) is not None else None
+    if user is None:
+        user = User(user_info['email'], user_info['name'])
         mongo.db.users.insert_one(user.to_dict())
-        flash("Thanks for registration")
-        return redirect(url_for('users.login'))
-    return render_template('register.html', form=form)
+    session['user_info'] = user_info
+    login_user(user)
+    return redirect(url_for('core.index'))
 
 #login
 @users.route('/login', methods=['GET','POST'])
 def login():
     """login user"""
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.from_dict(
-                mongo.db.users.find_one({'email': form.email.data})
-                ) if mongo.db.users.find_one({'email': form.email.data}
-                                             ) is not None else None
-        if user is not None and user.check_password(form.password.data):
-            login_user(user)
-            flash("Login Successful")
+    redirect_uri = url_for('users.auth', _external=True)
+    return oauth.google.authorize_redirect(redirect_uri)
 
-            next = request.args.get('next')
-
-            if next is None or not next[0] == '/':
-                next = url_for('core.index')
-            return redirect(next)
-    return render_template('login.html', form=form)
 
 #logout
 @users.route('/logout')
+@login_required
 def logout():
     """ Logout user """
     logout_user()
+    session.pop('user_info', None)
     return redirect(url_for('core.index'))
