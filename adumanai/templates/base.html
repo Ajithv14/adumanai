@@ -29,6 +29,20 @@
        </ul>
       </div>
     </div>
+    <div class="slider-container">
+      <div class="slider-wrapper">
+        <div class="slider" id="slider">
+          <img src="{{ url_for('static',filename='images/img1.jpg')}}" alt="img1" id="slide-1" class="active">
+          <img src="{{ url_for('static',filename='images/img2.jpg')}}" alt="img2" id="slide-2">
+          <img src="{{ url_for('static',filename='images/img3.jpg')}}" alt="img3" id="slide-3">
+        </div>
+
+      </div>
+    </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{{ url_for('static',filename='scripts/scripts.js')}}"></script>
+ 
+    
 </body>
 </html>
